@@ -21,7 +21,7 @@ namespace MvcMovie.Controllers
 
         // GET: Movies
         // GET: Movies
-        public async Task<IActionResult> Index(string movieGenre, string searchString)
+        public async Task<IActionResult> Index(string movieGenre, string movieTitle, string movieRating)
         {
             if (_context.Movie == null)
             {
@@ -35,9 +35,14 @@ namespace MvcMovie.Controllers
             var movies = from m in _context.Movie
                          select m;
 
-            if (!string.IsNullOrEmpty(searchString))
+            if (!string.IsNullOrEmpty(movieTitle))
             {
-                movies = movies.Where(s => s.Title!.ToUpper().Contains(searchString.ToUpper()));
+                movies = movies.Where(s => s.Title!.ToUpper().Contains(movieTitle.ToUpper()));
+            }
+
+            if (!string.IsNullOrEmpty(movieRating))
+            {
+                movies = movies.Where(s => s.Rating!.ToUpper().Contains(movieRating.ToUpper()));
             }
 
             if (!string.IsNullOrEmpty(movieGenre))
@@ -45,13 +50,13 @@ namespace MvcMovie.Controllers
                 movies = movies.Where(x => x.Genre == movieGenre);
             }
 
-            var movieGenreVM = new MovieGenreViewModel
+            var movieGenreRatingVMR = new MovieGenreRatingViewModel
             {
                 Genres = new SelectList(await genreQuery.Distinct().ToListAsync()),
                 Movies = await movies.ToListAsync()
             };
 
-            return View(movieGenreVM);
+            return View(movieGenreRatingVMR);
         }
 
         // GET: Movies/Details/5
