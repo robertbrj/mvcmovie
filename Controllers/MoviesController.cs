@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MvcMovie.Data;
 using MvcMovie.Models;
+using X.PagedList.Extensions;
 
 namespace MvcMovie.Controllers
 {
@@ -21,7 +22,7 @@ namespace MvcMovie.Controllers
 
         // GET: Movies
         // GET: Movies
-        public async Task<IActionResult> Index(string movieGenre, string movieTitle, string movieRating)
+        public async Task<IActionResult> Index(string movieGenre, string movieTitle, string movieRating, int? page)
         {
             if (_context.Movie == null)
             {
@@ -55,6 +56,12 @@ namespace MvcMovie.Controllers
                 Genres = new SelectList(await genreQuery.Distinct().ToListAsync()),
                 Movies = await movies.ToListAsync()
             };
+
+            var pageNumber = page ?? 1; // 
+            var pageSize = 5;
+            var onePageOfProducts = movies.ToPagedList(pageNumber, pageSize);
+
+            ViewData["OnePageOfProducts"] = onePageOfProducts;
 
             return View(movieGenreRatingVMR);
         }
@@ -187,5 +194,7 @@ namespace MvcMovie.Controllers
         {
             return _context.Movie.Any(e => e.Id == id);
         }
+
+
     }
 }
