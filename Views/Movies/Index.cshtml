@@ -2,10 +2,10 @@
 
 @{
     ViewData["Title"] = "Movies";
-    var pagedMovies = (IPagedList<MvcMovie.Models.Movie>)ViewData["OnePageOfProducts"];
+    var pagedMovies = ViewData["OnePageOfProducts"] as IPagedList<MvcMovie.Models.Movie>;
 }
 
-@using X.PagedList.Mvc.Core; 
+@using X.PagedList.Mvc.Core;
 @using X.PagedList;
 
 <link href="/Content/PagedList.css" rel="stylesheet" type="text/css" />
@@ -56,30 +56,33 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in pagedMovies)
+        @if(pagedMovies != null )
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ReleaseDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Genre)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Price)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Rating)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
+            @foreach (var item in pagedMovies)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ReleaseDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Genre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Rating)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
         }
     </tbody>
 </table>
